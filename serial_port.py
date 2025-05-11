@@ -1,6 +1,5 @@
 import serial
 
-
 class Serial_port(serial.Serial):
     def __init__(self, port, baudrate, bytesize=8, stopbits=1, timeout=0.8, parity='N', **kwargs):
         """
@@ -52,11 +51,13 @@ class Serial_port(serial.Serial):
         data = self.com.read(read_len).decode('utf-8')
         return data
 
-    def ser_control(self,color):
-        """视觉反馈数据串口控制逻辑"""
-        self.com.write(str('send_data').encode())
-        
-
-
-if __name__ == '__main__':
-    print("串口debug")
+    def ser_ctrl(self, middle_point, middle_base, left_base, right_base):
+        if middle_point >= right_base:
+            self.com.write('e\n'.encode())
+            print("右纠")
+        elif middle_point < left_base:
+            self.com.write('q\n'.encode())
+            print("左纠")
+        elif left_base < middle_base < right_base:
+            self.com.write('w\n'.encode())
+            print("直走")
